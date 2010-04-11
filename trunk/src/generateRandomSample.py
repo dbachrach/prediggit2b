@@ -4,7 +4,7 @@ Created on 16/mar/2010
 
 @author: ChrisN
 
-usage: python generateRandomSample featureDatabase limit pathToResultDatabase
+usage: python3 generateRandomSample.py featureDatabase limit pathToResultDatabase
 
 where
 featureDatabse is the relative path to the database of features
@@ -51,12 +51,12 @@ if __name__ == '__main__':
     print("creating table for results...\n")
     
     '''create tables'''
-    rescursor.execute("create table trainingset ('id' integer primary key not null, 'time' integer not null, 'attention' integer not null, 'user' numeric not null, 'domain' double not null, 'topic' double not null, " + ", ".join(["headlineWord"+str(y)+" integer not null"  for y in range(1,101)]) + ", ".join(["descriptionWord"+str(y)+" integer not null"  for y in range(1,101)]) + ", 'popular' integer not null);")
+    rescursor.execute("create table trainingset ('id' integer primary key not null, 'time' integer not null, 'attention' integer not null, 'user' numeric not null, 'domain' double not null, 'topic' double not null, " + ", ".join(["headlineWord"+str(y)+" integer not null"  for y in range(1,101)]) + ", " +", ".join(["descriptionWord"+str(y)+" integer not null"  for y in range(1,101)]) + ", 'popular' integer not null);")
 
     print("writing results to database...\n")
     
     '''insert sample'''
-    valueplaceholder = "("+ ",".join(["?"]*207)+")"
+    valueplaceholder = "("+ ",".join(["?"]*FeatureUtils.numFeatures)+")"
     for instance in sample:
         rescursor.execute("insert into trainingset values " + valueplaceholder,instance)        
         
