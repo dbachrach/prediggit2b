@@ -4,7 +4,7 @@ Created on 12/mar/2010
 
 @author: ChrisN
 
-usage: python extractor startdate enddate pathToResultDatabase
+usage: python3 extractor.py startdate enddate pathToResultDatabase
 
 where
 startdate is of the form YYYY-M-D
@@ -140,7 +140,7 @@ if __name__ == '__main__':
         
         for pair in restfidf:
             if pair[0] in topHeadlineWords:
-                topHeadlineWords[pair[0]] *= pair[1]       #max(topHeadlineWords[pair[0]], pair[1])
+                topHeadlineWords[pair[0]] *= pair[1]
             else:
                 topHeadlineWords[pair[0]] = pair[1]
             
@@ -150,11 +150,10 @@ if __name__ == '__main__':
         
         for pair in restfidf:
             if pair[0] in topDescriptionWords:
-                topDescriptionWords[pair[0]] *= pair[1]   #max(topDescriptionWords[pair[0]], pair[1])
+                topDescriptionWords[pair[0]] *= pair[1]
             else:
                 topDescriptionWords[pair[0]] = pair[1]
 
-    
     
     topHeadlineWords = sorted(topHeadlineWords.items(), key=itemgetter(1), reverse=True)
     topDescriptionWords = sorted(topDescriptionWords.items(), key=itemgetter(1), reverse=True)

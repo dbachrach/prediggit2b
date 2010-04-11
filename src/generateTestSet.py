@@ -4,7 +4,7 @@ Created on 15/mar/2010
 
 @author: ChrisN
 
-usage: python generateTestSet startdate enddate featureDatabase pathToResultDatabase
+usage: python3 generateTestSet.py startdate enddate featureDatabase pathToResultDatabase
 
 where
 startdate is of the form YYYY-M-D
@@ -51,8 +51,12 @@ if __name__ == '__main__':
     cursor.execute("select * from stories where (submit_date >= ? and submit_date < ?);", (startstamp,endstamp))
     story = cursor.fetchone()
     
-    headlineBuffer = []
-    descriptionBuffer = []
+    traincursor.execute("select * from headline_words;")
+    headlineTopWords = traincursor.fetchall()
+    traincursor.execute("select * from description_words;")
+    descriptionTopWords = traincursor.fetchall()
+    
+    wordOffset = FeatureUtils.wordOffset
     
     featuresRecord = []
     
@@ -76,12 +80,12 @@ if __name__ == '__main__':
         
             '''pull time of day'''
             feature[1] = FeatureUtils.extractTime(int(story[3]))
-        
-            print("extracting features from feature database...")
             
             '''pull attention grabbing word'''
             cleanHeadline = FeatureUtils.cleanString(str(story[1],encoding='utf8'))
             feature[2] = FeatureUtils.extractHotWord(cleanHeadline)
+            
+            cleanDescription = FeatureUtils.cleanString(str(story[2],encoding='utf8'))
             
             '''pull user, domain, and topic'''
             user = str(story[5],encoding='utf8').strip()
@@ -119,9 +123,19 @@ if __name__ == '__main__':
                 sys.exit("More than one matching topic "+topic+" encountered, feature database is corrupt.\nExiting...")
             else:
                 feature[5] = int(topicres[0][0])
-            
-#            headlineBuffer.append(str(feature[0]) + ".\n" + cleanHeadline + ".\n" + FeatureUtils.terminator +"\n")
-#            descriptionBuffer.append(str(feature[0]) + ".\n" + FeatureUtils.cleanString(str(story[2],encoding='utf8'))+ ".\n" + FeatureUtils.terminator +"\n")
+                
+            i = wordOffset
+            for word in headlineTopWords:
+                if word[0] in cleanHeadline:
+                    feature[i] = 1
+                    
+                i += 1
+                
+            for word in descriptionTopWords:
+                if word[0] in cleanDescription:
+                    feature[i] = 1
+                    
+                i += 1
             
             '''this is included for convenience of checking the accuracy'''
             if(str(story[4],encoding='utf8') == "popular"):
@@ -144,13 +158,14 @@ if __name__ == '__main__':
     print("creating table for results...\n")
     
     '''create tables'''
-    rescursor.execute("create table testset ('id' integer primary key not null, 'time' integer not null, 'attention' integer not null, 'user' numeric not null, 'domain' double not null, 'topic' double not null, 'headline' integer not null, 'description' integer not null, 'popular' integer not null);")
+    rescursor.execute("create table testset ('id' integer primary key not null, 'time' integer not null, 'attention' integer not null, 'user' numeric not null, 'domain' double not null, 'topic' double not null, " + ", ".join(["headlineWord"+str(y)+" integer not null"  for y in range(1,101)]) + ", " +", ".join(["descriptionWord"+str(y)+" integer not null"  for y in range(1,101)]) + ", 'popular' integer not null);")
 
     print("writing results to database...\n")
     
     '''insert features'''
+    valueplaceholder = "("+ ",".join(["?"]*FeatureUtils.numFeatures)+")"
     for features in featuresRecord:
-        rescursor.execute("insert into testset (id,time,attention,user,domain,topic,headline,description,popular) values (?,?,?,?,?,?,?,?,?);",features)        
+        rescursor.execute("insert into testset values "+valueplaceholder+";",features)        
         
     resdb.commit()
     resdb.close()
