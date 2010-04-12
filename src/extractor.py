@@ -76,7 +76,7 @@ if __name__ == '__main__':
             id, time of day, attention word, 
             user percentage (sequential), domain percentage (sequential), topic percentage (sequential), 
             popular headline words count x 100, popular description words count x 100, is popular'''
-            feature = [0] * numfeatures
+            feature = {}
         
             '''pull id'''
             feature[0] = int(story[0])
@@ -165,6 +165,10 @@ if __name__ == '__main__':
     topHeadlineWords = list(topHeadlineWords)[0:100]
     topDescriptionWords = list(topDescriptionWords)[0:100]
     
+#    print(topHeadlineWords)
+#    print(topDescriptionWords)
+#    sys.exit(0)
+    
     '''add binary flag if word appears in the headline or description'''
     for feature in featuresRecord:
         
@@ -191,7 +195,7 @@ if __name__ == '__main__':
 
                 
     
-    print("creating tables for results...\n")
+    print("creating tables for results...")
     
     '''create tables'''
     rescursor.execute("create table features ('id' integer primary key not null, 'time' integer not null, 'attention' integer not null, 'user' numeric not null, 'domain' double not null, 'topic' double not null, " + ", ".join(["headlineWord"+str(y)+" integer not null"  for y in range(1,101)]) +", " + ", ".join(["descriptionWord"+str(y)+" integer not null"  for y in range(1,101)]) + ", 'popular' integer not null);")
@@ -207,7 +211,16 @@ if __name__ == '__main__':
     fields = ["?"]*numfeatures
     fieldsstring = "("+",".join(fields)+")"
     for features in featuresRecord:
-        rescursor.execute("insert into features values "+fieldsstring+";",features)
+        i = 0
+        fs = [0] * FeatureUtils.numFeatures
+        
+        while i < FeatureUtils.numFeatures:
+            if i in features.keys():
+                fs[i] = features[i]
+                
+            i += 1
+                
+        rescursor.execute("insert into features values "+fieldsstring+";",fs)
         
     '''insert top headline words'''
     for word in topHeadlineWords:
