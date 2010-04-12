@@ -13,7 +13,6 @@ if __name__ == '__main__':
 
     import FeatureUtils
     import sys
-    import collections
           
     args = sys.argv[1:]
     
@@ -45,5 +44,3 @@ if __name__ == '__main__':
             i = i + 1
         
         f.write("\n")
-            
-                     
