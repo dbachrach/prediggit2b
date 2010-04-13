@@ -21,6 +21,8 @@ if __name__ == '__main__':
           
     args = sys.argv[1:]
     
+    print("Generating sample set for "+args[0]+" with limit "+args[1])
+    
     trainingdatabasename = args[0]
     limit = int(args[1])
     resdatabase = args[2]
@@ -48,7 +50,7 @@ if __name__ == '__main__':
     popular = None
     unpopular = None
     
-    print("creating table for results...\n")
+    print("creating table for results...")
     
     '''create tables'''
     rescursor.execute("create table trainingset ('id' integer primary key not null, 'time' integer not null, 'attention' integer not null, 'user' numeric not null, 'domain' double not null, 'topic' double not null, " + ", ".join(["headlineWord"+str(y)+" integer not null"  for y in range(1,101)]) + ", " +", ".join(["descriptionWord"+str(y)+" integer not null"  for y in range(1,101)]) + ", 'popular' integer not null);")
@@ -64,5 +66,5 @@ if __name__ == '__main__':
     resdb.close()
     
     print(str(len(sample)) + " training records inserted")
-    print("Done!")
+    print("Done!\n")
     
