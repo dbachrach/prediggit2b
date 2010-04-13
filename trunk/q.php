@@ -37,11 +37,11 @@ getStories(0, 100, $DIGG_API);
 
 function getStories($offset, $count, $api) {
 	global $db;
-	while ($offset < 500000)
+	while ($offset < 5000000)
 	{
 	try 
 	{   																			  
-	    $params = array('offset' => $offset, 'count' => $count, 'min_submit_date' => "1246341594");
+	    $params = array('offset' => $offset, 'count' => $count, 'max_submit_date' => "1242838800"); //1235887200 1236647229
 	    $res = $api->story->getAll($params);
 	    $stories = $res->stories;
 	   
@@ -49,6 +49,7 @@ function getStories($offset, $count, $api) {
 	    $cnt = 0;
 	    foreach ($stories as $story) 
 	    {
+	       echo "submit: " . sqlite_escape_string($story->submit_date) . "\n";
 	    	$query = $db->prepare("INSERT INTO stories (id, title, description, submit_date, status, user_name, topic, container, link) 
 	    	VALUES (:id, :title, :description, :submit_date, :status, :user_name, :topic, :container, :link)");
 	        

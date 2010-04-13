@@ -38,7 +38,7 @@ if __name__ == '__main__':
         
         f.write(str(popular))
         
-        i = 0
+        i = 1
         for val in story[1:-1] :
             f.write(" "+str(i)+":"+str(val))
             i = i + 1
