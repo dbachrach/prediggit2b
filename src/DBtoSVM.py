@@ -5,10 +5,6 @@ Created on 12/mar/2010
 @author: DustinB
 '''
 
-
-def emptyPair():
-    return [0,0]
-
 if __name__ == '__main__':
 
     import FeatureUtils
@@ -22,12 +18,12 @@ if __name__ == '__main__':
     db = FeatureUtils.connectExisting(databasename)
 
     cursor = db.cursor()
-    cursor.execute("select * from features")
+    cursor.execute("select * from trainingset;")
     
     f = open(output, 'w')
     
     
-    for story in cursor.fetchall() :
+    for story in cursor.fetchall():
         '''indices are 
             id, time of day, attention word, 
             user percentage (sequential), domain percentage (sequential), topic percentage (sequential), 
@@ -39,7 +35,7 @@ if __name__ == '__main__':
         f.write(str(popular))
         
         i = 1
-        for val in story[1:-1] :
+        for val in story[1:-1]:
             f.write(" "+str(i)+":"+str(val))
             i = i + 1
         
