@@ -128,13 +128,13 @@ if __name__ == '__main__':
                 
             i = wordOffset
             for word in headlineTopWords:
-                if word[0] in cleanHeadline:
+                if word[0] in cleanHeadline.lower():
                     feature[i] = 1
                     
                 i += 1
                 
             for word in descriptionTopWords:
-                if word[0] in cleanDescription:
+                if word[0] in cleanDescription.lower():
                     feature[i] = 1
                     
                 i += 1
