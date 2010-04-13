@@ -25,6 +25,8 @@ if __name__ == '__main__':
           
     args = sys.argv[1:]
     
+    print("Test Set: "+args[0]+" to "+args[1])
+    
     startdate = args[0].split("-")
     startdate = datetime.datetime(int(startdate[0]), int(startdate[1]), int(startdate[2]))
     enddate = args[1].split("-")
@@ -155,12 +157,12 @@ if __name__ == '__main__':
     stories = None
                 
     
-    print("creating table for results...\n")
+    print("\ncreating table for results...")
     
     '''create tables'''
     rescursor.execute("create table testset ('id' integer primary key not null, 'time' integer not null, 'attention' integer not null, 'user' numeric not null, 'domain' double not null, 'topic' double not null, " + ", ".join(["headlineWord"+str(y)+" integer not null"  for y in range(1,101)]) + ", " +", ".join(["descriptionWord"+str(y)+" integer not null"  for y in range(1,101)]) + ", 'popular' integer not null);")
 
-    print("writing results to database...\n")
+    print("writing results to database...")
     
     '''insert features'''
     valueplaceholder = "("+ ",".join(["?"]*FeatureUtils.numFeatures)+")"
@@ -172,5 +174,5 @@ if __name__ == '__main__':
     
     print(str(len(featuresRecord)) + " test records inserted")
     print("skipped "+str(skippedrecords) +" records")
-    print("Done!")
+    print("Done!\n")
     

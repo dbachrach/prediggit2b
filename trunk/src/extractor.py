@@ -30,6 +30,8 @@ if __name__ == '__main__':
           
     args = sys.argv[1:]
     
+    print("Features for "+args[0]+" to "+args[1])
+    
     startdate = args[0].split("-")
     startdate = datetime.datetime(int(startdate[0]), int(startdate[1]), int(startdate[2]))
     enddate = args[1].split("-")
@@ -249,7 +251,7 @@ if __name__ == '__main__':
     
     print(str(len(featuresRecord)) + " feature records inserted")
     print("skipped "+str(skippedrecords) +" records")
-    print("Done!")
+    print("Done!\n")
     
     
     
