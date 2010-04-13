@@ -175,8 +175,8 @@ if __name__ == '__main__':
     for feature in featuresRecord:
         
         i = wordOffset
-        hline = feature[6]
-        dline = feature[7]
+        hline = feature[6].lower()
+        dline = feature[7].lower()
         
         feature[6] = 0
         feature[7] = 0
